@@ -1,0 +1,51 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: anomaly-api
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.xml
+    enabled: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: admin
+  datasource:
+    #url: jdbc:postgresql://host.docker.internal:5432/b2b_mudad_db
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/anomaly_db?reWriteBatchedInserts=true}
+    username: ${DATASOURCE_USERNAME:postgres}
+    password: ${DATASOURCE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 20000 #maximum number of milliseconds that a client will wait for a connection
+      minimum-idle: 3 #minimum number of idle connections maintained by HikariCP in a connection pool
+      maximum-pool-size: 5 #maximum pool size
+      max-lifetime: 800000   # maximum lifetime in milliseconds of a connection in the pool after it is closed.
+  jpa:
+    defer-datasource-initialization: false
+    #database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate #
+    properties:
+      hibernate:
+        generate_statistics: true
+        session:
+          events:
+            log:
+              LOG_QUERIES_SLOWER_THAN_MS: 20
+        format_sql: true
+        jdbc:
+          batch_size: 1000
+          order_inserts: true
+    open-in-view: false
+  sql:
+    init:
+      mode: never
+
+anomaly:
+  threshold:
+    review: 0.7500
+    block: 0.8500

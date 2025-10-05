@@ -383,7 +383,7 @@ to train the model:
 The code above in summary will do the following:
 
 <figure>
-<img src="https://github.com/motazco135/anomaly-model-training/blob/master/src/main/resources/data-flow.png" alt="Data Flow" />
+<img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-train/src/main/resources/data-flow.png" alt="Data Flow" />
 <figcaption aria-hidden="true">Data Flow</figcaption>
 </figure>
 
@@ -622,7 +622,7 @@ The result will show "**ALLOW**"
 1.  Histogram – Amount Z-Score
 
     <figure>
-    <img src="https://github.com/motazco135/anomaly-model-training/blob/master/src/main/resources/hist_amount_z.png"
+    <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-train/src/main/resources/hist_amount_z.png"
     alt="Histogram – Amount Z-Score" />
     <figcaption aria-hidden="true">Histogram – Amount Z-Score</figcaption>
     </figure>
@@ -638,7 +638,7 @@ The result will show "**ALLOW**"
 2.  Histogram – Isolation Forest Scores
 
     <figure>
-    <img src="https://github.com/motazco135/anomaly-model-training/blob/master/src/main/resources/hist_anomaly_score.png"
+    <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-train/src/main/resources/hist_anomaly_score.png"
     alt="Isolation Forest Scores" />
     <figcaption aria-hidden="true">Isolation Forest Scores</figcaption>
     </figure>
@@ -653,7 +653,7 @@ The result will show "**ALLOW**"
 3.  Histogram – Median Deviation
 
     <figure>
-    <img src="https://github.com/motazco135/anomaly-model-training/blob/master/src/main/resources/hist_median_deviation.png"
+    <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-train/src/main/resources/hist_median_deviation.png"
     alt="Median Deviation" />
     <figcaption aria-hidden="true">Median Deviation</figcaption>
     </figure>
@@ -667,7 +667,7 @@ The result will show "**ALLOW**"
 4.  Histogram – Time Segment Ratio
 
     <figure>
-    <img src="https://github.com/motazco135/anomaly-model-training/blob/master/src/main/resources/hist_time_segment_ratio.png"
+    <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-train/src/main/resources/hist_time_segment_ratio.png"
     alt="Time Segment Ratio" />
     <figcaption aria-hidden="true">Time Segment Ratio</figcaption>
     </figure>
@@ -681,7 +681,7 @@ The result will show "**ALLOW**"
 5.  Histogram – Velocity Ratio
 
     <figure>
-    <img src="https://github.com/motazco135/anomaly-model-training/blob/master/src/main/resources/hist_velocity_ratio.png"
+    <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-train/src/main/resources/hist_velocity_ratio.png"
     alt="Velocity Ratio" />
     <figcaption aria-hidden="true">Velocity Ratio</figcaption>
     </figure>
@@ -696,8 +696,8 @@ The result will show "**ALLOW**"
     Score)
 
     <figure>
-    <img src="https://github.com/motazco135/anomaly-model-training/blob/master/src/main/resources/scatter_z_vs_velocity_by_score.png"
-    alt="../resources/ai/part4/scatter_z_vs_velocity_by_score.png" />
+    <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-train/src/main/resources/scatter_z_vs_velocity_by_score.png"
+    alt="scatter_z_vs_velocity_by_score.png" />
     </figure>
 
     - Most points align diagonally near the origin, confirming stable

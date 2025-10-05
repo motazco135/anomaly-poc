@@ -729,7 +729,7 @@ We trained our anomaly detector model using Isolation Forest algorithm,
 test the model and visualize the customer transaction scores.
 
 You can find the complete code in
-[github](https://github.com/motazco135/anomaly-model-training)
+[github](https://github.com/motazco135/anomaly-poc/tree/master/anomaly-train)
 
 In the Next final Part we will build a transaction service, Where we
 will score the transaction in real time to decide if it is an outlier or

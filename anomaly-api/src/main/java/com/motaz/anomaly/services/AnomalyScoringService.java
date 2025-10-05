@@ -73,7 +73,8 @@ public class AnomalyScoringService {
             anomalyAlertEntity.setChannel(fundTransferRequestDto.getChannel());
             anomalyAlertEntity.setTsUtc(fundTransferRequestDto.getTsUtc());
             anomalyAlertEntity.setScore(new BigDecimal(score));
-            anomalyAlertEntity.setSeverity(decision.name());
+            anomalyAlertEntity.setValidationDecision(decision.name());
+
 
             String featuresJson = String.format(
                     "{\"amountZScore\": %.6f, \"timeSegmentRatio\": %.6f, \"velocityRatio\": %.6f, \"medianDeviation\": %.6f}",

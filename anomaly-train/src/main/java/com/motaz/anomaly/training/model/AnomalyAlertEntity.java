@@ -44,7 +44,7 @@ public class AnomalyAlertEntity {
     @Column(name = "score", nullable = false, precision = 6, scale = 4)
     private BigDecimal score;
 
-    @Column(name = "severity", nullable = false, length = 8)
+    @Column(name = "severity")
     private String severity;
 
     @Column(name = "facts_json", nullable = false)
@@ -54,6 +54,28 @@ public class AnomalyAlertEntity {
     @ColumnDefault("now()")
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
+
+    @Column(name = "agent_status")
+    private String agentStatus;
+
+    @ColumnDefault("0")
+    @Column(name = "agent_attempts")
+    private Integer agentAttempts ;
+
+    @Column(name = "agent_last_error")
+    private String agentLastError;
+
+    @Column(name = "llm_explanation_json")
+    private String llmExplanationJson;
+
+    @Column(name = "llm_model")
+    private String llmModel;
+
+    @Column(name = "llm_latency_ms")
+    private Integer llmLatencyMs;
+
+    @Column(name = "validation_decision",nullable = false)
+    private String validationDecision ;
 
     @PrePersist
     private void setCreatedAt() {

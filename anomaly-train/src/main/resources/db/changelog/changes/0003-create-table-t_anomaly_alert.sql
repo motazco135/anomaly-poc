@@ -7,7 +7,14 @@ CREATE TABLE IF NOT EXISTS t_anomaly_alert (
   channel       VARCHAR(16) NOT NULL,
   ts_utc        TIMESTAMP NOT NULL,
   score         NUMERIC(6,4) NOT NULL,
-  severity      VARCHAR(50) NOT NULL,      -- low|med|high
+  severity      VARCHAR(50) ,
   facts_json    JSONB NOT NULL,           -- {amount_z, time_ratio, velocity_ratio, median_dev, means...}
+  agent_status           VARCHAR(24)  DEFAULT 'NEW',    -- NEW | IN_PROGRESS | DONE | ERROR
+  agent_attempts         INT          DEFAULT 0,
+  agent_last_error       TEXT,
+  llm_explanation_json   TEXT,
+  llm_model              VARCHAR(64),
+  llm_latency_ms         INT,
+  validation_decision    VARCHAR(16) NOT NULL,                    -- AUTO_ALLOW | REQUIRE_REVIEW
   created_at    TIMESTAMP NOT NULL DEFAULT NOW()
 );

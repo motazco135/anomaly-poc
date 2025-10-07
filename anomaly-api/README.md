@@ -425,9 +425,9 @@ login to start the workflow creation.
   <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-2.png" alt="Query Excution" />
   </figure>
 
-\+ Configure the following query :
+\ Configure the following query :
 
-\+
+\
 
     UPDATE public.t_anomaly_alert
        SET agent_status = 'IN_PROGRESS',
@@ -441,10 +441,12 @@ login to start the workflow creation.
         LIMIT 50
      )
 
-\+ ![Query Excution](:https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-3.png)
+\
+
+![Query Excution](:https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-3.png)
 
 - Then Add "IF" node where we will check that the DB query returns a
-  result or not, if data found continue workflow.
+  result or not if data found continue workflow.
 
   <figure>
   <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-4.png" alt="Query Excution" />

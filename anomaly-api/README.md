@@ -91,7 +91,7 @@ Loader Class
 Now we have a customer baseline in Redis:
 
 <figure>
-<img src="../resources/ai/part5/customer-baseline-redis.png"
+<img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/customer-baseline-redis.png"
 alt="Redis Customer Baseline" />
 <figcaption aria-hidden="true">Redis Customer Baseline</figcaption>
 </figure>
@@ -410,7 +410,7 @@ login to start the workflow creation.
   Credentials tab also we will add the DB connections details as below :
 
   <figure>
-  <img src="../resources/ai/part5/n8n-1.png" alt="n8n credentials" />
+  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-1.png" alt="n8n credentials" />
   </figure>
 
 - Now we will start our work flow by adding a Manual Trigger node (Fore
@@ -420,7 +420,7 @@ login to start the workflow creation.
   table and update the processing status.
 
   <figure>
-  <img src="../resources/ai/part5/n8n-2.png" alt="Query Excution" />
+  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-2.png" alt="Query Excution" />
   </figure>
 
 \+ Configure the following query :
@@ -439,35 +439,35 @@ login to start the workflow creation.
         LIMIT 50
      )
 
-\+ ![Query Excution](:../resources/ai/part5/n8n-3.png)
+\+ ![Query Excution](:https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-3.png)
 
 - Then Add "IF" node where we will check that the DB query returns a
   result or not, if data found continue workflow.
 
   <figure>
-  <img src="../resources/ai/part5/n8n-4.png" alt="Query Excution" />
+  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-4.png" alt="Query Excution" />
   </figure>
 
 - Next we will Add Edit Field(Set) node, where we will map the DB result
   set to specific JSON.
 
   <figure>
-  <img src="../resources/ai/part5/n8n-5.png" alt="Query Excution" />
+  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-5.png" alt="Query Excution" />
   </figure>
 
   <figure>
-  <img src="../resources/ai/part5/n8n-6.png" alt="Query Excution" />
+  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-6.png" alt="Query Excution" />
   </figure>
 
 - Add an AI Agent node and configure the LLM model and the prompt
   message.
 
   <figure>
-  <img src="../resources/ai/part5/n8n-7.png" alt="Query Excution" />
+  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-7.png" alt="Query Excution" />
   </figure>
 
 <figure>
-<img src="../resources/ai/part5/n8n-8.png" alt="Query Excution" />
+<img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-8.png" alt="Query Excution" />
 </figure>
 
 \+ As we format the data in the Edit Field node and pass it to the AI
@@ -527,13 +527,13 @@ required dynamic data, we use the following prompt message.
   table.
 
   <figure>
-  <img src="../resources/ai/part5/n8n-8.png" alt="update querye" />
+  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-8.png" alt="update querye" />
   </figure>
 
 - Final Work flow:
 
   <figure>
-  <img src="../resources/ai/part5/n8n-10.png" alt="update querye" />
+  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-10.png" alt="update querye" />
   </figure>
 
 when we execute the work flow, you will see the t\_alert table is

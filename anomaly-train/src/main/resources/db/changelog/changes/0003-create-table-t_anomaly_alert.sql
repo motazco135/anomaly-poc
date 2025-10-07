@@ -16,5 +16,7 @@ CREATE TABLE IF NOT EXISTS t_anomaly_alert (
   llm_model              VARCHAR(64),
   llm_latency_ms         INT,
   validation_decision    VARCHAR(16) NOT NULL,                    -- AUTO_ALLOW | REQUIRE_REVIEW
+  llm_summary TEXT,
+  llm_main_factor VARCHAR(64),
   created_at    TIMESTAMP NOT NULL DEFAULT NOW()
 );

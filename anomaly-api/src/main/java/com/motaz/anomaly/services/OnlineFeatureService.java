@@ -51,7 +51,6 @@ public class OnlineFeatureService {
         double timeSegmentRatio = amount / safeSeg;
         double velocityRatio    = amount / safeMean;
         double medianDeviation  = amount / safeMed;
-        double[] realTimeFeatureSet = { amountZScore, timeSegmentRatio, velocityRatio, medianDeviation };
 
         OnlineFeaturesDto onlineFeaturesDto = OnlineFeaturesDto.builder()
                 .customerId(customerId)

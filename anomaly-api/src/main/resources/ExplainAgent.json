@@ -1,0 +1,525 @@
+{
+  "name": "ExplainAgent",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        -352
+      ],
+      "id": "becd669e-c216-4351-8af0-17cf1895429f",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "content": "## ExplainAgent\n\n \n>This agent’s job: take a raw anomaly log (customer ID, channel, amount, features, score, etc.)\n→ produce a short JSON explanation that’s human-readable and structured enough to be parsed.\n> \n",
+        "height": 480,
+        "width": 672,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        -480
+      ],
+      "typeVersion": 1,
+      "id": "ba9bf86c-6c79-4c5c-b5c3-4d9adde35cf7",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are analyzing a banking transaction for anomaly detection.\nanomaly_id : {{ $json.id }}\ntxn_id: {{ $json.txn_id }}\nCustomer ID: {{ $json.customer_id }}\nChannel: {{ $json.channel }}\nCurrency: {{ $json.currency_code }}\nAmount: {{ $json.amount }}\nAnomaly Score: {{ $json.anomaly_score }}\nThreshold p95 : 0.423 , (p98): 0.481, (p99): 0.544\nDecision: {{ $json.validation_decision }}  // ALLOW or UNDER_REVIEW or BLOCK\n\nCustomer Baseline:\n- Mean amount: {{ $json.customer_base_line_mean_amount }}\n- Std deviation: {{ $json.customer_base_std_deviation }}\n- Median amount: {{ $json.customer_base_amount_amount }}\n- Time segment:  {{ $json.customer_base_time_segment }} (0 Night, 1 Morning, 2 Afternoon, 3 Evening)\n\nTransaction Features:\n- Amount Z-Score: {{ $json.amountZScore }}\n- Time Segment Ratio: {{ $json.time_segment_ratio }}\n- Velocity Ratio: {{ $json.velocity_ratio }}\n- Median Deviation: {{ $json.median_deviation }}\n",
+        "options": {
+          "systemMessage": "=Return JSON with these exact fields:\n{\n  \"anomaly id\":\"anomaly_id\",\n  \"txn_id\":\"txn_id\",\n  \"customer_id\": {{ $json.customer_id }},\n  \"summary\": \"Short sentence explaining why score is high or low.\",\n  \"main_factor\": \"amount_z_score | velocity_ratio | time_segment_ratio | median_deviation\",\n  \"explanation\": \"2–3 short sentences connecting numbers to reasoning.\",\n  \"risk_category\": \"LOW | MEDIUM | HIGH | CRITICAL\",\n  \"recommended_action\": \" UNDER_REVIEW | BLOCK \"\n}\nOnly suggest 'BLOCK' if the transaction anomaly score is 0.8500 or above  otherwise use 'UNDER_REVIEW'. "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        -336
+      ],
+      "id": "8e4e1415-6880-4011-a4c3-ed4d159ac29d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "chatgpt-4o-latest"
+        },
+        "options": {
+          "responseFormat": "json_object"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        -128
+      ],
+      "id": "775936ee-fc48-4389-83fe-6498e0198533",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "4XbVyKVEB2QFsDDT",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "response"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        752,
+        -128
+      ],
+      "id": "d35da466-00fe-48ed-9b8c-09ac35c9798e",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"id\":\"{{ $json.id }}\",\n  \"txn_id\":\"{{ $json.txn_id }}\",\n  \"customer_id\":\"{{ $json.customer_id }}\",\n  \"channel\":\"{{ $json.channel }}\",\n  \"currency_code\":\"{{ $json.currency_code }}\",\n  \"amount\":\"{{ $json.amount }}\",\n  \"anomaly_score\":\"{{ $json.score }}\",\n  \"validation_decision\":\"{{ $json.validation_decision }}\",\n  \"customer_base_line_mean_amount\":\"{{ $json.facts_json.baseline.parseJson().mean }}\",\n  \"customer_base_std_deviation\":\"{{ $json.facts_json.baseline.parseJson().std }}\",\n  \"customer_base_amount_amount\":\"{{ $json.facts_json.baseline.parseJson().median }}\",\n  \"customer_base_time_segment\":\"{{ $json.facts_json.baseline.parseJson().segmentIndex }}\",\n  \"amountZScore\":\"{{ $json.facts_json.features.parseJson().amountZScore }}\",\n  \"time_segment_ratio\":\"{{ $json.facts_json.features.parseJson().timeSegmentRatio }}\",\n  \"velocity_ratio\":\"{{ $json.facts_json.features.parseJson().velocityRatio }}\",\n  \"median_deviation\":\"{{ $json.facts_json.features.parseJson().medianDeviation }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        -336
+      ],
+      "id": "01a3f473-2919-4d37-a1c9-c3ff219ee826",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE public.t_anomaly_alert\n   SET agent_status = 'IN_PROGRESS'\n WHERE id IN (\n   SELECT id FROM t_anomaly_alert\n    WHERE agent_status = 'NEW'\n      AND validation_decision IN ('UNDER_REVIEW','BLOCK')\n    ORDER BY id\n    FOR UPDATE SKIP LOCKED\n    LIMIT 50\n )\nRETURNING *;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -272,
+        -352
+      ],
+      "id": "b2c34f05-3e7d-435c-a7b9-6fcd2b6f3325",
+      "name": "Fetch Alert Log",
+      "notesInFlow": false,
+      "credentials": {
+        "postgres": {
+          "id": "iVtwYndr7o5M608m",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n   \"id\":\"{{ $json.output.parseJson()['anomaly id'] }} \",\n   \"txn_id\":\"{{ $json.output.parseJson().txn_id }} \",\n   \"customer_id\":\"{{ $json.output.parseJson().customer_id }} \",\n   \"summary\":\"{{ $json.output.parseJson().summary }} \",\n   \"main_factor\":\"{{ $json.output.parseJson().main_factor }} \",\n   \"explanation\":\"{{ $json.output.parseJson().explanation }} \",\n   \"risk_category\":\"{{ $json.output.parseJson().risk_category }} \",\n   \"recommended_action\":\"{{ $json.output.parseJson().recommended_action }} \"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1184,
+        -336
+      ],
+      "id": "d258d61d-6255-4969-afbc-fa2fc77a2295",
+      "name": "format Agent output"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7b04a9c8-076a-46ed-ae43-921fb5c6276e",
+              "leftValue": "={{ $json.success }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -64,
+        -352
+      ],
+      "id": "da4d2dcf-758a-49ff-a128-a80e1630e75b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "name",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "t_anomaly_alert",
+          "mode": "list",
+          "cachedResultName": "t_anomaly_alert"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "severity": "={{ $json.risk_category }}",
+            "llm_explanation_json": "={{ $json.explanation }}",
+            "llm_model": "gpt-4o-mini",
+            "agent_status": "DONE",
+            "id": "={{ $json.id }}",
+            "llm_summary": "={{ $json.summary }}",
+            "llm_main_factor": "={{ $json.main_factor }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "txn_id",
+              "displayName": "txn_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "customer_id",
+              "displayName": "customer_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "amount",
+              "displayName": "amount",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "currency_code",
+              "displayName": "currency_code",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "channel",
+              "displayName": "channel",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ts_utc",
+              "displayName": "ts_utc",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "severity",
+              "displayName": "severity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "facts_json",
+              "displayName": "facts_json",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "agent_status",
+              "displayName": "agent_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "agent_attempts",
+              "displayName": "agent_attempts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "agent_last_error",
+              "displayName": "agent_last_error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "llm_explanation_json",
+              "displayName": "llm_explanation_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "llm_model",
+              "displayName": "llm_model",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "llm_latency_ms",
+              "displayName": "llm_latency_ms",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "validation_decision",
+              "displayName": "validation_decision",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "llm_summary",
+              "displayName": "llm_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "llm_main_factor",
+              "displayName": "llm_main_factor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1392,
+        -336
+      ],
+      "id": "bf04cbd8-8096-42f7-9e20-0803fd664c43",
+      "name": "Update rows in t_anomaly_alert table",
+      "credentials": {
+        "postgres": {
+          "id": "iVtwYndr7o5M608m",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Fetch Alert Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "format Agent output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Alert Log": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format Agent output": {
+      "main": [
+        [
+          {
+            "node": "Update rows in t_anomaly_alert table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b2e3ed61-fa78-47a1-9d3c-cdda441f3dbd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "187ce23dcf1a907358ccf54110d65ff9f08a37fac601cec2988044be3045178f"
+  },
+  "id": "59lrlzbX2bMN4hhw",
+  "tags": []
+}

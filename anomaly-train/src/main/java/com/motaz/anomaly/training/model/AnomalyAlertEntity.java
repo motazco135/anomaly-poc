@@ -77,6 +77,12 @@ public class AnomalyAlertEntity {
     @Column(name = "validation_decision",nullable = false)
     private String validationDecision ;
 
+    @Column(name="llm_summary")
+    private String llmSummary;
+
+    @Column(name="llm_main_factor")
+    private String llmMainFactor;
+
     @PrePersist
     private void setCreatedAt() {
         this.createdAt = Instant.now();

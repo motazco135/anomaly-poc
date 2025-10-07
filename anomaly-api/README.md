@@ -422,12 +422,12 @@ login to start the workflow creation.
   table and update the processing status.
 
   <figure>
-  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-2.png" alt="Query Excution" />
+  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-2.png"   />
   </figure>
 
-\ Configure the following query :
+Configure the following query :
 
-\
+
 
     UPDATE public.t_anomaly_alert
        SET agent_status = 'IN_PROGRESS',
@@ -441,37 +441,39 @@ login to start the workflow creation.
         LIMIT 50
      )
 
-\
 
-![Query Excution](:https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-3.png)
+
+  <figure>
+  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-3.png"   />
+  </figure>
 
 - Then Add "IF" node where we will check that the DB query returns a
   result or not if data found continue workflow.
 
   <figure>
-  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-4.png" alt="Query Excution" />
+  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-4.png"   />
   </figure>
 
 - Next we will Add Edit Field(Set) node, where we will map the DB result
   set to specific JSON.
 
   <figure>
-  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-5.png" alt="Query Excution" />
+  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-5.png"   />
   </figure>
 
   <figure>
-  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-6.png" alt="Query Excution" />
+  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-6.png"   />
   </figure>
 
 - Add an AI Agent node and configure the LLM model and the prompt
   message.
 
   <figure>
-  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-7.png" alt="Query Excution" />
+  <img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-7.png"   />
   </figure>
 
 <figure>
-<img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-8.png" alt="Query Excution" />
+<img src="https://github.com/motazco135/anomaly-poc/blob/master/anomaly-api/src/main/resources/images/n8n-8.png"   />
 </figure>
 
 \+ As we format the data in the Edit Field node and pass it to the AI
